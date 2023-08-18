@@ -19,5 +19,5 @@
 ---
 #### Tester Development Note
 - Tester is utilizing the 11-800 Logic Controller Enclosure and trandformer.
-- Custom made PCB that fits inside is linked here
+- [Custom made PCB mount](tester_with_cutout.3mf) that fits inside this enclosure 
 - Using 3M screws as default

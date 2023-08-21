@@ -1,5 +1,7 @@
 # 90-800 Tester Development (104252)
 ---
+End of Project: September 2023
+---
 #### Instruction for T-XXX
 1.  Plug in 5V power supply to the left hand side of the tester
 2.  Wait until display shows "Waiting for Power"

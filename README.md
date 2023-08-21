@@ -14,6 +14,9 @@ End of Project: September 2023
 9.  Tester will go through Fire Loop functionality test next and upon completion, the tester will display the result.
 10. If display shows "Test Good", turn off the AC power switch and remove the AC power connection on device under test.
 11. Remove other wire connections and remove the device under test
+
+Note:
+- If the output voltage potentiometer is not within the range, the tester may not be able to detec the power presense and sit in the "Waiting for Power" state.  Adjust the voltage to acceptable level using potentiometer with rocker switch on until voltage measurement shows on the display.
 ---
 #### Altium Project File
  - [Project File](https://detex-corporation.365.altium.com/designs/327D70DE-DD06-426B-8618-25C8A5CFA4D7#design)

@@ -21,3 +21,5 @@
 - Tester is utilizing the 11-800 Logic Controller Enclosure and trandformer.
 - [Custom made PCB mount](tester_with_cutout.3mf) that fits inside this enclosure 
 - Using 3M screws as default
+- 90 Degree 5V 5.5mm X 2.5mm US Plug
+- 5V 1A power Adapter(typically used for LED strip etc)

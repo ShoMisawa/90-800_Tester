@@ -3,7 +3,7 @@
 End of Project: September 2023
 ---
 #### Instruction for T-867
-1.  1.	Plug in 5V power supply to the left-hand side of the tester.
+1. Plug in 5V power supply to the left-hand side of the tester.
 2.	Wait until display shows "Waiting for Power"
 3.	Place device under test on top of the tester using two screws diagonally. Make sure that the rocker switch of the device under test is in OFF position.
 4.	Make connections from the tester to the device under test (Input of the transformer, output of the transformer, Fire Loop, Voltage Output 1, and Voltage Output 2 Connection)

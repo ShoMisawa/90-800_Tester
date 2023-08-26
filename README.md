@@ -21,6 +21,7 @@ Note:
 #### Altium Project File
  - [Project File](https://detex-corporation.365.altium.com/designs/327D70DE-DD06-426B-8618-25C8A5CFA4D7#design)
  - Based on Seeed Studio XIAO SAMD21 Board [Link](https://www.seeedstudio.com/Seeeduino-XIAO-Arduino-Microcontroller-SAMD21-Cortex-M0+-p-4426.html?utm_source=blog&utm_medium=blog)
+ - [Datasheet](https://files.seeedstudio.com/wiki/Seeeduino-XIAO/res/ATSAMD21G18A-MU-Datasheet.pdf)
 
 ![](90-800-Tester-PWA-Image.png)
 

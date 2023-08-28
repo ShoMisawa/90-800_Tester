@@ -186,10 +186,11 @@ void loop() {
         
         case 4: // Fire loop test
             
-            preDisplay(2, 0, 0);
-            printDisplay("J6", in_voltage);
-            printDisplay("J7", in_voltage_2);
-            display.display();
+            // Do not need to show this in the final firmware...  It will be too fast to see the values anyway
+            // preDisplay(2, 0, 0);
+            // printDisplay("J6", in_voltage);
+            // printDisplay("J7", in_voltage_2);
+            // display.display();
             
         if (relayActiveFlag == 1){
           // Resetting the voltageValidation for fire loop detection
@@ -227,10 +228,12 @@ void loop() {
         }
         break;
         
-        case 5:
+        case 5: // Test Result
 
           // while toggle switch is in the LOW state, display the output voltage reading.
-          while (digitalRead(voltageDisplayToggle) == LOW){
+          while (!digitalRead(voltageDisplayToggle) == LOW){
+            in_voltage = voltMeasure(0);
+            in_voltage_2 = voltMeasure(1);
             preDisplay(2, 0, 0);
             printDisplay("J6", in_voltage);
             printDisplay("J7", in_voltage_2);

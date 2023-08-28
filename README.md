@@ -17,19 +17,21 @@ End of Project: September 2023
 
 Note:
 - If the output voltage potentiometer is not within the range, the tester may not be able to detec the power presense and sit in the "Waiting for Power" state.  Adjust the voltage to acceptable level using potentiometer with rocker switch on until voltage measurement shows on the display.
+- This has changed to 10V for detection.
 ---
 #### Altium Project File
  - [Project File](https://detex-corporation.365.altium.com/designs/327D70DE-DD06-426B-8618-25C8A5CFA4D7#design)
  - Based on Seeed Studio XIAO SAMD21 Board [Link](https://www.seeedstudio.com/Seeeduino-XIAO-Arduino-Microcontroller-SAMD21-Cortex-M0+-p-4426.html?utm_source=blog&utm_medium=blog)
  - [Datasheet](https://files.seeedstudio.com/wiki/Seeeduino-XIAO/res/ATSAMD21G18A-MU-Datasheet.pdf)
 
-![](90-800-Tester-PWA-Image.png)
+![](Assets/90-800-Tester-PWA-Image.png)
 
 ---
 #### Tester Development Note
 - Tester is utilizing the 11-800 Logic Controller Enclosure and trandformer.
-- [Custom made PCB mount](tester_with_cutout.3mf) that fits inside this enclosure 
+- [Custom made PCB mount](3D Model/tester_with_cutout.3mf) that fits inside this enclosure 
 - Using 3M screws as default
 - 90 Degree 5V 5.5mm X 2.5mm US Plug
 - 5V 1A power Adapter(typically used for LED strip etc)
   - [Used on this project](https://www.amazon.com/dp/B0C1NNZH87?psc=1&ref=ppx_yo2ov_dt_b_product_details)
+  - 

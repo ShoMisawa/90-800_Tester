@@ -67,6 +67,8 @@ void setup() {
   pinMode(LED_9, OUTPUT);
   pinMode(LED_10, OUTPUT);
   pinMode(Relay, OUTPUT);
+  // pinMode(A0, INPUT);
+  // pinMode(A1, INPUT);
   
   digitalWrite(LED_8, LOW);
   digitalWrite(LED_9, LOW);
@@ -82,72 +84,106 @@ void setup() {
   display.setTextColor(SSD1306_WHITE);        // Draw white text
   display.display();
 
+  analogReadResolution(12);
+
 }
 
 void loop() {
 
-  unsigned long currentMillis = millis();
+  // in_voltage = voltMeasure(0);
+  // in_voltage_2 = voltMeasure(1);
 
-  // Waiting for 24V to come in...
-  // Reading Voltage
-  in_voltage = voltMeasure(0);
-  in_voltage_2 = voltMeasure(1);
+  // J2 on the tester PWA
+  adc_value = analogRead(0);
+  adc_voltage = (adc_value * ref_voltage) / 4095.0;
+  in_voltage = (adc_voltage / resRatio) + 0.3; // 0.3 is for schottky diode voltage adjustment
 
-  // if 24V line is greater than 10V, asume that the DUT is connected to the tester.  Which is indicated using voltageDetected variable.
-  if ((in_voltage > 10 || in_voltage_2 > 10) && voltageDetected == 0 && voltageDetected != 2) {
-    voltageDetected = 1;
-    state = 1; // Going to state 1
+  // J4 on the tester PWA
+  adc_value_2 = analogRead(1);
+  adc_voltage_2 = (adc_value_2 * ref_voltage) / 4095.0;
+  in_voltage_2 = (adc_voltage_2 / resRatio) + 0.3; // 0.3 is for schottky diode voltage adjustment
 
-  } else if (voltageDetected != 2) {
-    preDisplay(2, 0, 0);
-    display.println("  Waiting");
-    display.println("    for ");
-    display.println("   Power");
-    display.display();
-    voltageDetected = 0;
-  }
+  // preDisplay(2, 0, 0);
+  // printDisplay("J6", in_voltage);
+  // printDisplay("J7", in_voltage_2);
+  // display.display();
 
-  if (voltageDetected == 1) {
-    voltageDetected = 2;
-  }
+  /*
+  1) Wait for 24V to become alive, case = 0
+  2) Power detected and transition into voltage confirmation.  This step is needed since the output voltage should be adjusted to be 24VDC. 
+  
+  */
 
-  if (voltageDetected == 2) {
-    switch (state) {
-      case 1: // Waiting until power is detected...
-        preDisplay(3, 0, 0);
-        display.println("   Power");
-        display.println("  Detected");
-        display.display();
-        delay(100);
-        powerDetectionOK = 1;
-        state = 2;
-        digitalWrite(LED_8, HIGH);
-        break;
+  switch(state){
+    case 0: // Waiting for 24V to come in... Upon detection move to the next case
 
-      case 2: // Checking voltage level
-        if ((currentMillis - previousMillis) >= 1000) {
-          previousMillis = currentMillis;
-          digitalWrite(LED_9, HIGH);
-        }
-        digitalWrite(LED_9, LOW);
+      // Waiting until voltage readings become higher than 15VDC
+      while ((in_voltage < 15 || in_voltage_2 < 15)){
+        // J2 on the tester PWA
+        adc_value = analogRead(0);
+        adc_voltage = (adc_value * ref_voltage) / 4095.0;
+        in_voltage = (adc_voltage / resRatio) + 0.3; // 0.3 is for schottky diode voltage adjustment
+
+        // J4 on the tester PWA
+        adc_value_2 = analogRead(1);
+        adc_voltage_2 = (adc_value_2 * ref_voltage) / 4095.0;
+        in_voltage_2 = (adc_voltage_2 / resRatio) + 0.3; // 0.3 is for schottky diode voltage adjustment
+
+        // Waiting for power text on display
         preDisplay(2, 0, 0);
-        printDisplay("J6", in_voltage);
-        printDisplay("J7", in_voltage_2);
+        display.println("  Waiting");
+        display.println("    for ");
+        display.println("   Power");
         display.display();
 
-        if (in_voltage < 15 || in_voltage_2 < 15) {
-          voltageDetected = 0;
-          break;
-        }
+        // preDisplay(2, 0, 0);
+        // printDisplay("J6", in_voltage);
+        // printDisplay("J7", in_voltage_2);
+        // display.display();
+      } 
+      
+      preDisplay(3, 0, 0);
+      display.println("   Power");
+      display.println("  Detected");
+      display.display();
+      delay(1000);
+      
+      voltageDetected = 1; // after coming out from the while loop, the voltage should be greater than 15VDC
+      state = 1;
 
-        while(!digitalRead(Button) == LOW){
-          in_voltage = voltMeasure(0);
-          in_voltage_2 = voltMeasure(1);
+    break;
+
+    case 1: // Power detected... Transition into voltage confirmation
+      
+      powerDetectionOK = 1;
+      state = 2;
+      digitalWrite(LED_8, HIGH);
+      
+      // After voltage detected and voltage drops below 15V, it will go back to state 0
+      if (in_voltage < 15 || in_voltage_2 < 15){
+        state = 0;
+        digitalWrite(LED_8, LOW);
+      }
+      
+    break;
+
+    case 2: // Showing voltage reading on OLED and waiting for confirmation button to be pressed
+      // Waiting for the confirmation by pressing the button located on the right hand bottom side
+      while(!digitalRead(Button) == LOW){
+          adc_value = analogRead(0);
+          adc_voltage = (adc_value * ref_voltage) / 4095.0;
+          in_voltage = (adc_voltage / resRatio) + 0.3; // 0.3 is for schottky diode voltage adjustment
+
+          // J4 on the tester PWA
+          adc_value_2 = analogRead(1);
+          adc_voltage_2 = (adc_value_2 * ref_voltage) / 4095.0;
+          in_voltage_2 = (adc_voltage_2 / resRatio) + 0.3; // 0.3 is for schottky diode voltage adjustment
+
           preDisplay(2, 0, 0);
           printDisplay("J6", in_voltage);
           printDisplay("J7", in_voltage_2);
           display.display();
-          
+
           if (in_voltage < upperLimit && in_voltage > lowerLimit) {
             voltageValidation_1 = 1;
             voltageValidation_2 = 1;
@@ -157,23 +193,23 @@ void loop() {
             voltageValidation_2 = 0;
             digitalWrite(LED_9,LOW);
           } 
-        }
-        
-        if ( voltageValidation_1 == 1 && voltageValidation_2 == 1) {
+
+          if ( voltageValidation_1 == 1 && voltageValidation_2 == 1) {
           VoltageTestOK = 1;
-          preDisplay(3, 0, 0);
-          display.println("  Voltage");
-          display.println("    OK");
-          display.display();
+          // preDisplay(3, 0, 0);
+          // display.println("  Voltage");
+          // display.println("    OK");
+          // display.display();
           digitalWrite(LED_9, HIGH);
-          delay(1000);
+          //delay(1000);
           state = 3;
         } else {
           digitalWrite(LED_9, LOW);
         }
-        break;
-        
-        case 3: // Turning off relay for FL test
+      }
+    break;
+
+    case 3: // Turning off relay for FL test
             digitalWrite(Relay,LOW);
             preDisplay(3, 0, 0);
             display.println("   Relay");
@@ -294,9 +330,9 @@ void loop() {
           
           
         break;
-    } // end of switch statement
   }
-  //delay(500);
+
+
 } // End of main loop
 
 void resetParameters(){
@@ -323,11 +359,25 @@ void resetParameters(){
 
 float voltMeasure(int channel) {
   analogReadResolution(12);
-  adc_value = analogRead(channel);
-  adc_voltage = (adc_value * ref_voltage) / 4095.0;
-  in_voltage = adc_voltage / resRatio;
+  
+  if(channel == 0){
+    
+    adc_value = analogRead(channel);
+    adc_voltage = (adc_value * ref_voltage) / 4095.0;
+    in_voltage = adc_voltage / resRatio;
+    return in_voltage;
+    
+  }
 
-  return in_voltage;
+  if(channel == 1){
+    
+    adc_value_2 = analogRead(channel);
+    adc_voltage_2 = (adc_value_2 * ref_voltage) / 4095.0;
+    in_voltage_2 = adc_voltage_2 / resRatio;
+    return in_voltage_2;
+
+  }
+  
 } // end of voltMeter function
 
 void printDisplay(String string, float voltage) {
@@ -345,8 +395,8 @@ void preDisplay(char textSize, int x, int y) {
   display.setCursor(x, y);
 }//end of preDisplay
 
-void timerIsr() {
-  digitalWrite(2, HIGH);
-  delay(100);
-  digitalWrite(2, LOW);
-}
+// void timerIsr() {
+//   digitalWrite(2, HIGH);
+//   delay(100);
+//   digitalWrite(2, LOW);
+// }

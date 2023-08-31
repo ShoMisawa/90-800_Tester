@@ -1,6 +1,7 @@
 # 90-800 Tester Development (104252)
 ---
 End of Project: September 2023
+UPDATE: Production team have requested to have confirmation button on the Top side.  This change has made on Rev A4.  Board not ordered yet.
 ---
 #### Instruction for T-867
 1. Plug in 5V power supply to the left-hand side of the tester.

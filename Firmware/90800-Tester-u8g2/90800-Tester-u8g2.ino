@@ -136,6 +136,14 @@ void loop() {
 
       // Waiting until voltage readings become higher than 15VDC
       while ((in_voltage < 15 || in_voltage_2 < 15)){
+        currentMillis = millis();
+
+        if (currentMillis - previousMillis >= interval){
+          previousMillis = currentMillis;
+          iconVisible = !iconVisible;
+        }
+        
+        
         // J2 on the tester PWA
         adc_value = analogRead(0);
         adc_voltage = (adc_value * ref_voltage) / 4095.0;
@@ -152,14 +160,14 @@ void loop() {
         u8g2.setFont(u8g2_font_helvB08_tr);
         u8g2.drawStr(17, 29, "Waiting for Power");
         //u8g2.drawBox(56, 35, 13, 15);
-        u8g2.drawXBMP( 55, 35, 16, 16, image_Voltage_16x16_bits);
-//        if(iconVisible == true){
-//          u8g2.drawXBMP( 55, 35, 16, 16, image_Voltage_16x16_bits);
-//        }else{
-//          u8g2.setDrawColor(0);
-//          u8g2.drawBox(56, 35, 13, 15);
-//          u8g2.setDrawColor(1);
-//        }
+        //u8g2.drawXBMP( 55, 35, 16, 16, image_Voltage_16x16_bits);
+        if(iconVisible == true){
+          u8g2.drawXBMP( 55, 35, 16, 16, image_Voltage_16x16_bits);
+        }else{
+          u8g2.setDrawColor(0);
+          u8g2.drawBox(56, 35, 13, 15);
+          u8g2.setDrawColor(1);
+        }
         
         u8g2.sendBuffer();          // transfer internal memory to the display
 //    }

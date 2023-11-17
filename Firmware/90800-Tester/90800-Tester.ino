@@ -28,6 +28,9 @@ Beastdevices_INA3221 ina3221(INA3221_ADDR41_VCC);
 #define Button               2
 #define voltageDisplayToggle 3
 
+
+#define LED_TEST_MODE        1
+
 float R1 = 100000;
 float R2 = 10000;
 float resRatio = R2 / (R1 + R2);
@@ -90,7 +93,12 @@ void setup() {
 
 void loop() {
 
-  // in_voltage = voltMeasure(0);
+  if (LED_TEST_MODE == 1){
+    digitalWrite(LED_8, HIGH);
+    digitalWrite(LED_9, HIGH);
+    digitalWrite(LED_10, HIGH);
+  }else{
+    // in_voltage = voltMeasure(0);
   // in_voltage_2 = voltMeasure(1);
 
   // J2 on the tester PWA
@@ -331,7 +339,7 @@ void loop() {
           
         break;
   }
-
+  }
 
 } // End of main loop
 

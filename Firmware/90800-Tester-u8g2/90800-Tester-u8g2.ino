@@ -1322,30 +1322,30 @@ void loop() {
           u8g2.clearBuffer(); 
           u8g2.drawFrame(2, 2, 124, 62);
           u8g2.drawLine(3, 15, 125, 15);
-          u8g2.setFont(u8g2_font_haxrcorp4089_tr);
+          u8g2.setFont(u8g2_font_9x15B_mr);
           //u8g2.drawStr(27, 30, "J6:");
-          u8g2.setFont(u8g2_font_haxrcorp4089_tr);
+          u8g2.setFont(u8g2_font_9x15B_mr);
           sprintf(voltagebuffer,"J6: %.2f", in_voltage);
-          u8g2.drawStr(27, 30, voltagebuffer);
-          u8g2.setFont(u8g2_font_haxrcorp4089_tr);
+          u8g2.drawStr(10, 30, voltagebuffer);
+          u8g2.setFont(u8g2_font_9x15B_mr);
           u8g2.drawStr(83, 30, "V");
           u8g2.setFont(u8g2_font_haxrcorp4089_tr);
           u8g2.drawStr(30, 13, "Voltage Reading");
-          u8g2.setFont(u8g2_font_haxrcorp4089_tr);
+          u8g2.setFont(u8g2_font_9x15B_mr);
           //u8g2.drawStr(27, 45, "J7:");
-          u8g2.setFont(u8g2_font_haxrcorp4089_tr);
+          u8g2.setFont(u8g2_font_9x15B_mr);
           sprintf(voltagebuffer, "J7: %.2f", in_voltage_2);
-          u8g2.drawStr(27, 45, voltagebuffer);
-          u8g2.setFont(u8g2_font_haxrcorp4089_tr);
+          u8g2.drawStr(10, 45, voltagebuffer);
+          u8g2.setFont(u8g2_font_9x15B_mr);
           u8g2.drawStr(83, 45, "V");
-          if (in_voltage < upperLimit && in_voltage > lowerLimit)
-            u8g2.drawXBMP( 99, 38, 24, 24, image_icons8_outline_effect_tickmark_under_a_square_box_24_bits);
-          else{
-            u8g2.setDrawColor(0);
-            u8g2.drawBox(97, 36, 27, 26);
-            u8g2.setDrawColor(1);
-            voltageCheckVisible = false;
-          }
+//          if (in_voltage < upperLimit && in_voltage > lowerLimit)
+//            u8g2.drawXBMP( 99, 38, 24, 24, image_icons8_outline_effect_tickmark_under_a_square_box_24_bits);
+//          else{
+//            u8g2.setDrawColor(0);
+//            u8g2.drawBox(97, 36, 27, 26);
+//            u8g2.setDrawColor(1);
+//            voltageCheckVisible = false;
+//          }
           u8g2.sendBuffer();
 
           if (in_voltage < upperLimit && in_voltage > lowerLimit) {

@@ -37,4 +37,4 @@ Note:
 - 90 Degree 5V 5.5mm X 2.5mm US Plug
 - 5V 1A power Adapter(typically used for LED strip etc)
   - [Used on this project](https://www.amazon.com/dp/B0C1NNZH87?psc=1&ref=ppx_yo2ov_dt_b_product_details)
-  - 
+    

@@ -38,3 +38,13 @@ Note:
 - 5V 1A power Adapter(typically used for LED strip etc)
   - [Used on this project](https://www.amazon.com/dp/B0C1NNZH87?psc=1&ref=ppx_yo2ov_dt_b_product_details)
     
+---
+
+### Bootloader for XIAO
+
+- [Bootloader](https://github.com/Seeed-Studio/ArduinoCore-samd/blob/master/bootloaders/XIAOM0/bootloader-XIAO_m0-v3.7.0-33-g90ff611-dirty.bin)
+- [Wiki](https://wiki.seeedstudio.com/Software-SWD/)
+- [Tutoriak](https://embeddedcomputing.weebly.com/seeeduino-xiao-m0.html)
+- [Xiao Expansion Board](https://embeddedcomputing.weebly.com/the-5-programmer-debugger.html)
+- SWDIO and SWCLK are located on the bottom side of the board
+

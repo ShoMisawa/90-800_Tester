@@ -93,9 +93,9 @@ void loop() {
   Watchdog.reset();
 
   if(LED_TEST_MODE == 1){
-    digitalWrite(LED_8, HIGH);
-    digitalWrite(LED_9, HIGH);
-    digitalWrite(LED_10, HIGH);
+    digitalWrite(LED_8_PIN, HIGH);
+    digitalWrite(LED_9_PIN, HIGH);
+    digitalWrite(LED_10_PIN, HIGH);
   }else{
     in_voltage = voltMeasure(0);
     in_voltage_2 =  voltMeasure(1);
@@ -157,18 +157,18 @@ void loop() {
       
       powerDetectionOK = 1;
       state = 2;
-      digitalWrite(LED_8, HIGH);
+      digitalWrite(LED_8_PIN, HIGH);
       
       // After voltage detected and voltage drops below 15V, it will go back to state 0
       if (in_voltage < powerLevel || in_voltage_2 < powerLevel){
         state = 0;
-        digitalWrite(LED_8, LOW);
+        digitalWrite(LED_8_PIN, LOW);
       }
     break;
 
     case 2: // Showing voltage reading on OLED and waiting for confirmation button to be pressed
       // Waiting for the confirmation by pressing the button located on the right hand bottom side
-      while(!digitalRead(Button) == LOW){
+      while(!digitalRead(BUTTON_PIN) == LOW){
           in_voltage = voltMeasure(0);
           in_voltage_2 = voltMeasure(1);
           
@@ -208,19 +208,19 @@ void loop() {
           if (in_voltage < upperLimit && in_voltage > lowerLimit) {
             voltageValidation_1 = 1;
             voltageValidation_2 = 1;
-            digitalWrite(LED_9,HIGH);
+            digitalWrite(LED_9_PIN,HIGH);
           } else {
             voltageValidation_1 = 0;
             voltageValidation_2 = 0;
-            digitalWrite(LED_9,LOW);
+            digitalWrite(LED_9_PIN,LOW);
           } 
 
           if ( voltageValidation_1 == 1 && voltageValidation_2 == 1) {
           VoltageTestOK = 1;
-          digitalWrite(LED_9, HIGH);
+          digitalWrite(LED_9_PIN, HIGH);
           state = 3;
           } else {
-            digitalWrite(LED_9, LOW);
+            digitalWrite(LED_9_PIN, LOW);
           }
       }
     break;
@@ -243,7 +243,7 @@ void loop() {
               state = 4;
               counterGraphics = 0;
               relayActiveFlag = 1;
-              digitalWrite(Relay,LOW);
+              digitalWrite(RELAY_PIN,LOW);
               delay(1000);
               //break;
             }
@@ -275,13 +275,13 @@ void loop() {
             u8g2.sendBuffer();
             delay(1000);
             FLTestOK = 1;
-            digitalWrite(LED_10, HIGH);
-            digitalWrite(Relay, HIGH);
+            digitalWrite(LED_10_PIN, HIGH);
+            digitalWrite(RELAY_PIN, HIGH);
             relayActiveFlag = 0;
             state = 5;
           } else {
             delay(1000);
-            digitalWrite(LED_10, LOW);
+            digitalWrite(LED_10_PIN, LOW);
             state = 5;
           } 
         }
@@ -290,7 +290,7 @@ void loop() {
         case 5: // Test Result
 
           // while toggle switch is in the LOW state, display the output voltage reading.
-          while (!digitalRead(voltageDisplayToggle) == LOW){
+          while (!digitalRead(VOLTAGE_DISPLAY_TOGGLE_PIN) == LOW){
               in_voltage = voltMeasure(0);
               in_voltage_2 = voltMeasure(1);
 

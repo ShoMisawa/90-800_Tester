@@ -6,7 +6,7 @@ Program Written for Seeeduino-XIAO
 Microcontroller: ATSAMD21G18A
 Datasheet: https://files.seeedstudio.com/wiki/Seeeduino-XIAO/res/ATSAMD21G18A-MU-Datasheet.pdf
 
-Libraries:
+Include:
  - U8g2 by oliver (required to download)
  - Adafruit SleepyDog Library by Adafruit (required to download)
  - graphics.h is local library that consist of graphics data
@@ -39,18 +39,33 @@ void displayVoltageReading(float voltage, float voltage_2);
 /* Setup Function */
 void setup() {
 
-  pinMode(Button, INPUT_PULLUP); // this line also has external pullup resistor
-  pinMode(voltageDisplayToggle, INPUT_PULLUP); // this line also has external pullup resistor
+  // pinMode(Button, INPUT_PULLUP); // this line also has external pullup resistor
+  // pinMode(voltageDisplayToggle, INPUT_PULLUP); // this line also has external pullup resistor
 
-  pinMode(LED_8, OUTPUT);
-  pinMode(LED_9, OUTPUT);
-  pinMode(LED_10, OUTPUT);
-  pinMode(Relay, OUTPUT);
+  // pinMode(LED_8, OUTPUT);
+  // pinMode(LED_9, OUTPUT);
+  // pinMode(LED_10, OUTPUT);
+  // pinMode(Relay, OUTPUT);
   
-  digitalWrite(LED_8, LOW);
-  digitalWrite(LED_9, LOW);
-  digitalWrite(LED_10, LOW);
-  digitalWrite(Relay, HIGH);
+  // digitalWrite(LED_8, LOW);
+  // digitalWrite(LED_9, LOW);
+  // digitalWrite(LED_10, LOW);
+  // digitalWrite(Relay, HIGH); // New revision of the tester board is now connected to com to nc instead of no
+
+  // Configure LEDs and Relay as outputs
+  PORT->Group[0].DIRSET.reg = (1 << LED_8_PIN) | (1 << LED_9_PIN) | (1 << LED_10_PIN) | (1 << RELAY_PIN);
+
+  // Configure Button and Voltage Display Toggle as inputs with pull-ups
+  PORT->Group[0].DIRCLR.reg = (1 << BUTTON_PIN) | (1 << VOLTAGE_DISPLAY_TOGGLE_PIN);
+  PORT->Group[0].PINCFG[BUTTON_PIN].reg = PORT_PINCFG_INEN | PORT_PINCFG_PULLEN;
+  PORT->Group[0].PINCFG[VOLTAGE_DISPLAY_TOGGLE_PIN].reg = PORT_PINCFG_INEN | PORT_PINCFG_PULLEN;
+
+  // Enable pull-up resistors
+  PORT->Group[0].OUTSET.reg = (1 << BUTTON_PIN) | (1 << VOLTAGE_DISPLAY_TOGGLE_PIN);
+
+  // Set initial output values
+  PORT->Group[0].OUTCLR.reg = (1 << LED_8_PIN) | (1 << LED_9_PIN) | (1 << LED_10_PIN); // LEDs off
+  PORT->Group[0].OUTSET.reg = (1 << RELAY_PIN); // Relay on
 
   // SSD1306 Initialization...
   Serial.begin(9600);

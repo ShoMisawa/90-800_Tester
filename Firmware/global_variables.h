@@ -4,25 +4,30 @@
 /*------------------------------------------------------------------------------------------------------------------------*/
 /* Definitions*/
 // OLED Screen Pixel Size
-#define SCREEN_WIDTH          128           // OLED display width, in pixels
-#define SCREEN_HEIGHT         64            // OLED display height, in pixels
+#define SCREEN_WIDTH                128           // OLED display width, in pixels
+#define SCREEN_HEIGHT               64            // OLED display height, in pixels
 
 // Voltage Upper and Lower Limit
-#define upperLimit            24*(1+0.1)    // 10% upper limit
-#define lowerLimit            24*(1-0.1)    // 10% lower limit
+#define upperLimit                  24*(1+0.1)    // 10% upper limit
+#define lowerLimit                  24*(1-0.1)    // 10% lower limit
+
+// Acceptable Power detection
+#define powerLevel                  15
 
 /*Pin Definitions*/
-#define LED_8                 8             // Pin 8 : LED for Power Ditection
-#define LED_9                 9             // Pin 9 : LED for Voltage Level
-#define LED_10                10            // Pin 10 : LED for Fire Loop test
-#define Relay                 7             // Pin 7 : Relay Control
-#define Button                2             // Pin 2 : Button Read
-#define voltageDisplayToggle  3             // Pin 3 : Option to view the voltage level at the end of the test
+#define LED_8_PIN                   8             // Pin 8 (Port A): LED for Power Ditection
+#define LED_9_PIN                   9             // Pin 9 (Port A): LED for Voltage Level
+#define LED_10_PIN                  10            // Pin 10 (Port A): LED for Fire Loop test
+#define RELAY_PIN                   7             // Pin 7 (Port A): Relay Control
+#define BUTTON_PIN                  2             // Pin 2 (Port A): Button Read
+#define VOLTAGE_DISPLAY_TOGGLE_PIN  3             // Pin 3 (Port A): Option to view the voltage level at the end of the test
 
 // Debug Mode
-#define LED_TEST_MODE         0             // This mode can be used to check the LED brightness for LED8, 9, and 10
+#define LED_TEST_MODE                0             // This mode can be used to check the LED brightness for LED8, 9, and 10
 
 /*------------------------------------------------------------------------------------------------------------------------*/
+
+const float SCHOTTKY_VOLTAGE_DROP = 0.3;
 
 /*------------------------------------------------------------------------------------------------------------------------*/
 float R1 = 100000;                          // 100K Ohm
@@ -46,6 +51,9 @@ int adc_value_2 = 0;                        // Converted Value
 int voltageValidation_1 = 0;                // Flag if J9 reads proper voltage level
 int voltageValidation_2 = 0;                // Flag if J6 reads proper voltage level
 int voltageDetected = 0;                    // upon power connection to 24V, this flag is set to 0 when it is less than 15V.  Set to 1 when it is greater than 15V.  15V is random value.
+
+// Toggle Display
+volatile bool showVoltage = false;
 
 // State Switch Parameter
 int state = 0;

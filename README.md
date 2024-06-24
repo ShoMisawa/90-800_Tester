@@ -1,8 +1,10 @@
 # 90-800 Tester Development (104252)
 ---
-End of Project: September 2023
+End of Project: September 2023 ; Continue to make improvement
 
-UPDATE: Production team have requested to have confirmation button on the Top side.  This change has made on Rev A4.  Board not ordered yet.
+Completed: Production team have requested to have confirmation button on the Top side.  This change has made on Rev A4.  Board not ordered yet.
+
+Update: Op-Amp, TVS, Zener, Series Resistor, capacitor for the voltage measurement for 24VDC (Revision R5)
 ---
 #### Instruction for T-867
 1. Plug in 5V power supply to the left-hand side of the tester.

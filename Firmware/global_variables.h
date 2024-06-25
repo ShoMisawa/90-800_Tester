@@ -24,7 +24,6 @@
 
 // Debug Mode
 #define LED_TEST_MODE                0             // This mode can be used to check the LED brightness for LED8, 9, and 10
-
 /*------------------------------------------------------------------------------------------------------------------------*/
 
 const float SCHOTTKY_VOLTAGE_DROP = 0.3;

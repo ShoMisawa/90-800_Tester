@@ -5,6 +5,7 @@ Microcontroller: ATSAMD21G18A
 Datasheet: https://files.seeedstudio.com/wiki/Seeeduino-XIAO/res/ATSAMD21G18A-MU-Datasheet.pdf
 
 Revision: V4.2 : Added watchdog timer to each state and while loop.  Also in the beginning of the main loop
+Revision V4.3 : Organized code.  Put stuff into function and made it easier to read
 
 */
 
@@ -14,15 +15,16 @@ Revision: V4.2 : Added watchdog timer to each state and while loop.  Also in the
 /* Setting Up */
 void setup() {
 
-#if LED_TEST_MODE == 1
+#if LED_TEST_MODE
   GPIO_setup();  // Only initialize the GPIO
 #else
   GPIO_setup();
   OLED_init();
 
-  // SSD1306 Initialization...
+#if DEBUG
   Serial.begin(9600);
   Serial.println("Starting up ...");
+#endif
 
   delay(1000);  // One second splash screen
 
@@ -33,12 +35,20 @@ void setup() {
 
 void loop() {
   Watchdog.reset();
-#if LED_TEST_MODE == 1
+#if LED_TEST_MODE
   LED_TEST_ALLON();
 #else
   /* Measuring the voltage */
   checkVoltage();
 
+  unsigned long currentMillis = millis();
+
+#if DEMO
+  if (currentMillis - lastStateChangeTime >= stateChangeInterval) {
+    lastStateChangeTime = currentMillis;
+    state = (state + 1) % 6;  // Cycle through states 0 to 5
+  }
+#endif
   switch (state) {
     case 0:  // Waiting for 24V to come in... Upon detection move to the next case
 
@@ -94,12 +104,14 @@ void loop() {
         /* Measure Voltage */
         checkVoltage();
 
-        // Debug purposes
+
+#if DEBUG
         Serial.println("Power Detected!");
         Serial.print("Voltage Reading: ");
         Serial.print(in_voltage);
         Serial.print(" , ");
         Serial.println(in_voltage_2);
+#endif
 
         updateDisplay();
 
@@ -175,57 +187,18 @@ void loop() {
       Watchdog.reset();
       break;
 
-    case 5:  // Test Result
+    case 5:  // Showing Test Result
       // while toggle switch is in the LOW state, display the output voltage reading.
       while (!digitalRead(VOLTAGE_DISPLAY_TOGGLE_PIN) == LOW) {
         /* Measure Voltage */
         checkVoltage();
-
-        u8g2.setBitmapMode(1);
-        u8g2.clearBuffer();
-        u8g2.drawFrame(2, 2, 124, 62);
-        u8g2.drawLine(3, 15, 125, 15);
-        u8g2.setFont(u8g2_font_haxrcorp4089_tr);
-        //u8g2.drawStr(27, 30, "J6:");
-        u8g2.setFont(u8g2_font_haxrcorp4089_tr);
-        sprintf(voltagebuffer, "J6: %.2f", in_voltage);
-        u8g2.drawStr(27, 30, voltagebuffer);
-        u8g2.setFont(u8g2_font_haxrcorp4089_tr);
-        u8g2.drawStr(83, 30, "V");
-        u8g2.setFont(u8g2_font_haxrcorp4089_tr);
-        u8g2.drawStr(30, 13, "Voltage Reading");
-        u8g2.setFont(u8g2_font_haxrcorp4089_tr);
-        //u8g2.drawStr(27, 45, "J7:");
-        u8g2.setFont(u8g2_font_haxrcorp4089_tr);
-        sprintf(voltagebuffer, "J7: %.2f", in_voltage_2);
-        u8g2.drawStr(27, 45, voltagebuffer);
-        u8g2.setFont(u8g2_font_haxrcorp4089_tr);
-        u8g2.drawStr(83, 45, "V");
-
-        if (in_voltage < upperLimit && in_voltage > lowerLimit)
-          u8g2.drawXBMP(99, 38, 24, 24, image_icons8_outline_effect_tickmark_under_a_square_box_24_bits);
-        else {
-          u8g2.setDrawColor(0);
-          u8g2.drawBox(97, 36, 27, 26);
-          u8g2.setDrawColor(1);
-          voltageCheckVisible = false;
-        }
-
-        u8g2.sendBuffer();
+        OLED_Voltage_Reading_Display();
         Watchdog.reset();
       }
 
       if (VoltageTestOK == 1 && FLTestOK == 1 && powerDetectionOK == 1) {
 
-        u8g2.setBitmapMode(1);
-        u8g2.clearBuffer();
-        u8g2.drawFrame(2, 3, 125, 61);
-        u8g2.setFont(u8g2_font_haxrcorp4089_tr);
-        u8g2.drawStr(40, 12, "All Test OK");
-        u8g2.drawLine(2, 14, 126, 14);
-        u8g2.drawXBMP(51, 26, 30, 30, good_bitmap_allArray[counterGraphics]);
-        u8g2.sendBuffer();
-        counterGraphics = (counterGraphics + 1) % 28;
+        OLED_Test_OK_Screen();
         ////delay(5000);
 
         /*.Measure Voltage */
@@ -234,14 +207,7 @@ void loop() {
         if (in_voltage < 20 || in_voltage_2 < 20) {
           int resetGraphicEnable = 1;
           while (resetGraphicEnable == 1) {
-            u8g2.clearBuffer();
-            u8g2.setBitmapMode(1);
-            u8g2.drawFrame(2, 2, 125, 61);
-            u8g2.setFont(u8g2_font_haxrcorp4089_tr);
-            u8g2.drawStr(40, 49, "RESETTING...");
-            u8g2.drawXBMP(51, 11, 24, 24, reset_bitmap_allArray[counterGraphics2]);
-            u8g2.sendBuffer();
-            counterGraphics2 = (counterGraphics2 + 1) % 28;
+            OLED_RESET_Screen();
 
             if (counterGraphics2 == 0) {
               resetGraphicEnable = 0;
@@ -249,60 +215,25 @@ void loop() {
 
             Watchdog.reset();
           }
-
           delay(2000);
           resetParameters();
         }
       } else if (VoltageTestOK == 0 && FLTestOK == 1 && powerDetectionOK == 1) {
         // Test Failed
-        u8g2.clearBuffer();
-        u8g2.setBitmapMode(1);
-        u8g2.drawFrame(2, 2, 124, 62);
-        u8g2.setFont(u8g2_font_haxrcorp4089_tr);
-        u8g2.drawStr(33, 13, "Voltage Test");
-        u8g2.drawLine(2, 14, 126, 14);
-        u8g2.drawXBMP(37, 15, 48, 48, image_icons8_cross_48_bits);
-        u8g2.sendBuffer();
+        OLED_Voltage_Test_Failed_Screen();
         delay(5000);
       } else if (VoltageTestOK == 1 && FLTestOK == 0 && powerDetectionOK == 1) {
-        // Test Failed
-        u8g2.clearBuffer();
-        u8g2.setBitmapMode(1);
-        u8g2.drawFrame(2, 2, 124, 62);
-        u8g2.setFont(u8g2_font_haxrcorp4089_tr);
-        u8g2.drawStr(33, 13, "Fire Loop Test");
-        u8g2.drawLine(2, 14, 126, 14);
-        u8g2.drawXBMP(37, 15, 48, 48, image_icons8_cross_48_bits);
-        u8g2.sendBuffer();
-        //            delay(5000);
+        // Fire Loop Test Failed
+        OLED_FL_Test_Failed_Screen();
       } else if (VoltageTestOK == 1 && FLTestOK == 1 && powerDetectionOK == 0) {
-        u8g2.clearBuffer();
-        u8g2.setBitmapMode(1);
-        u8g2.drawFrame(2, 2, 124, 62);
-        u8g2.setFont(u8g2_font_haxrcorp4089_tr);
-        u8g2.drawStr(20, 13, "Power Detection Test");
-        u8g2.drawLine(2, 14, 126, 14);
-        u8g2.drawXBMP(37, 15, 48, 48, image_icons8_cross_48_bits);
-        u8g2.sendBuffer();
-        //            delay(5000);
+        // Power Detection Test Failed
+        OLED_Power_Detection_Failed_Screen();
       } else if (VoltageTestOK == 0 && FLTestOK == 0 && powerDetectionOK == 1) {
-        u8g2.clearBuffer();
-        u8g2.setBitmapMode(1);
-        u8g2.drawFrame(2, 2, 124, 62);
-        u8g2.setFont(u8g2_font_haxrcorp4089_tr);
-        u8g2.drawStr(27, 13, "FL and VT Test");
-        u8g2.drawLine(2, 14, 126, 14);
-        u8g2.drawXBMP(37, 15, 48, 48, image_icons8_cross_48_bits);
-        u8g2.sendBuffer();
-        //delay(5000);
+        // Voltage and Fire loop test failed
+        OLED_FL_VT_Failed_Screen();
       } else {
-        u8g2.clearBuffer();
-        u8g2.setBitmapMode(1);
-        u8g2.drawFrame(2, 2, 125, 61);
-        u8g2.setFont(u8g2_font_haxrcorp4089_tr);
-        u8g2.drawStr(38, 49, "ALL FAILED");
-        u8g2.drawXBMP(50, 13, 24, 24, image_icons8_sad_24_bits);
-        u8g2.sendBuffer();
+        // All test failed
+        OLED_All_Failed_Screen();
       }
       Watchdog.reset();
       break;

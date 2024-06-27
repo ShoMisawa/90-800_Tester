@@ -31,9 +31,10 @@
 const float SCHOTTKY_VOLTAGE_DROP = 0.3;
 
 /*------------------------------------------------------------------------------------------------------------------------*/
-float R1 = 100000;                          // 100K Ohm
-float R2 = 10000;                           // 10K Ohm
-float resRatio = R2 / (R1 + R2);            // Calculating the ratio
+// float R1 = 100000;                          // 100K Ohm
+// float R2 = 10000;                           // 10K Ohm
+// float resRatio = R2 / (R1 + R2);            // Calculating the ratio
+float resRatio = 1/16.05;;
 
 /*Voltage Reading Parameters*/
 float ref_voltage = 3.3;                    // Reference voltage of 3V3

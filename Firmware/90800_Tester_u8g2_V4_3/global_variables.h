@@ -13,6 +13,7 @@
 
 // Acceptable Power detection
 #define powerLevel                  15
+#define Calibration                 0.3
 
 /*Pin Definitions*/
 #define LED_8_PIN                   8             // Pin 8 (Port A): LED for Power Ditection
@@ -31,10 +32,10 @@
 const float SCHOTTKY_VOLTAGE_DROP = 0.3;
 
 /*------------------------------------------------------------------------------------------------------------------------*/
-// float R1 = 100000;                          // 100K Ohm
-// float R2 = 10000;                           // 10K Ohm
-// float resRatio = R2 / (R1 + R2);            // Calculating the ratio
-float resRatio = 1/16.05;;
+float R1 = 100000;                          // 100K Ohm
+float R2 = 10000;                           // 10K Ohm
+float resRatio = R2 / (R1 + R2);            // Calculating the ratio
+// float resRatio = 1/16.05;;
 
 /*Voltage Reading Parameters*/
 float ref_voltage = 3.3;                    // Reference voltage of 3V3

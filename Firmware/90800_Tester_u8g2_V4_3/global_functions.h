@@ -249,7 +249,7 @@ float voltMeasure(int channel) {
 
     adc_value = analogRead(channel);
     adc_voltage = (adc_value * ref_voltage) / 4095.0;
-    in_voltage = adc_voltage / resRatio;
+    in_voltage = (adc_voltage / resRatio) + Calibration;
     return in_voltage;
   }
 
@@ -257,7 +257,7 @@ float voltMeasure(int channel) {
 
     adc_value_2 = analogRead(channel);
     adc_voltage_2 = (adc_value_2 * ref_voltage) / 4095.0;
-    in_voltage_2 = adc_voltage_2 / resRatio;
+    in_voltage_2 = (adc_voltage_2 / resRatio) + Calibration;
     return in_voltage_2;
   }
 
@@ -317,21 +317,6 @@ void displayVoltageReading(float voltage, float voltage_2) {
   u8g2.setFont(u8g2_font_9x15B_mr);
   u8g2.drawStr(83, 45, "V");
   u8g2.sendBuffer();
-
-  // u8g2.setBitmapMode(1);
-  // u8g2.clearBuffer();
-  // u8g2.drawFrame(2, 2, 124, 62);
-  // u8g2.drawLine(3, 15, 125, 15);
-
-  // u8g2.setFont(u8g2_font_haxrcorp4089_tr);
-  // sprintf(voltagebuffer, "J6: %.2f", voltage);
-  // u8g2.drawStr(27, 30, voltagebuffer);
-  // u8g2.drawStr(83, 30, "V");
-  // sprintf(voltagebuffer, "J7: %.2f", voltage_2);
-  // u8g2.drawStr(27, 45, voltagebuffer);
-  // u8g2.drawStr(83, 45, "V");
-  // u8g2.setFont(u8g2_font_haxrcorp4089_tr);
-  // u8g2.drawStr(30, 13, "Voltage Reading");
 
   if (voltage < upperLimit && voltage > lowerLimit) {
     u8g2.drawXBMP(99, 38, 24, 24, image_icons8_outline_effect_tickmark_under_a_square_box_24_bits);

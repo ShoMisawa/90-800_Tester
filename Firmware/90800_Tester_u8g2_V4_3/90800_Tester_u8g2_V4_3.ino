@@ -1,12 +1,15 @@
 /*
+Current Revision: V4.3.2
 
 Program Written for Seeeduino-XIAO
+IDE: Arduino IDE
 Microcontroller: ATSAMD21G18A
 Datasheet: https://files.seeedstudio.com/wiki/Seeeduino-XIAO/res/ATSAMD21G18A-MU-Datasheet.pdf
 
+Revision History:
 Revision: V4.2 : Added watchdog timer to each state and while loop.  Also in the beginning of the main loop
 Revision V4.3 : Organized code.  Put stuff into function and made it easier to read
-
+Revision V4.3.2 : Added Calibration constant - adjust this value when calibrating.  Integrated into the global_functions.h.  The reading has been calibrated using GW inSTEK GPS-4303.
 */
 
 #include "global_variables.h"
